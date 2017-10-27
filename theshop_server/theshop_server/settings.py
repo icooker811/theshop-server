@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -92,6 +92,9 @@ DATABASES = {
     }
 }
 
+from mongoengine import connect
+connect('test-sensor')
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -129,14 +132,51 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+import djcelery
+djcelery.setup_loader()
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+
+# REDIS SETTINGS
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
+# CELERY SETTINGS
+BROKER_URL = 'redis://localhost:6379/0'
+
+CELERYBEAT_SCHEDULE = {}
+
+CELERY_TIMEZONE = 'UTC'
+
+# GOOGLE API KEY
+# ------------------------------------------------------------------------------
+GOOGLE_API_KEY = ''
+FCM_API_KEY = ''
+
 
 FCM_DJANGO_SETTINGS = {
-        "FCM_SERVER_KEY": "AIzaSyCqbxyMW9SYTNItL1ZkdQCopepv_8BP2VM",
+        "FCM_SERVER_KEY": FCM_API_KEY,
         "ONE_DEVICE_PER_USER": True,
         "DELETE_INACTIVE_DEVICES": True,
 }
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+STATIC_ROOT = os.path.realpath(PROJECT_PATH + "/../sitestatic")
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.realpath(PROJECT_PATH + "/../static"),
+)
+
+MEDIA_ROOT = os.path.realpath(PROJECT_PATH + "/../media")
+MEDIA_URL = '/media/'

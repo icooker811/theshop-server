@@ -1,0 +1,25 @@
+version: '2'
+services:
+  nginx:
+    build: docker-config/nginx
+    ports:
+      - 30000:80
+    volumes:
+      - .:/usr/src/app
+    links:
+      - theshop
+  theshop:
+    build: .
+    ports:
+      - 9001
+    environment:
+      - DJANGO_SETTINGS_MODULE=theshop_server.docker
+    volumes:
+      - .:/usr/src/app
+    links:
+      - redis
+      - mongo
+  mongo:
+    image: mongo
+  redis:
+    image: redis
