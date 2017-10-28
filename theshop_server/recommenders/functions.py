@@ -10,9 +10,9 @@ from sklearn import preprocessing
 
 from sklearn.externals import joblib
 
-from theshop_server import count_vector, tfidf, scaler, target, neigh
 
 from products.models import *
+from recommenders import count_vector, tfidf, scaler, target, neigh
 
 
 def build_product_recommendation_model():
