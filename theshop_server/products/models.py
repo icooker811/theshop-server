@@ -44,6 +44,12 @@ class Product(Document):
         return _data
 
     @property
+    def to_text(self):
+        _data = json.loads(self.to_json())
+        text = _data['description']
+        return text
+
+    @property
     def first_image(self):
         _first_image = None
         _data = json.loads(self.to_json())
