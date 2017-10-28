@@ -10,7 +10,7 @@ from sklearn import preprocessing
 
 from sklearn.externals import joblib
 
-from . import count_vector, tfidf, scaler, target, neigh
+from theshop_server import count_vector, tfidf, scaler, target, neigh
 
 from products.models import *
 
