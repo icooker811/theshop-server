@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
     'accounts',
     'chatbot',
-    'customers',
     'pages',
     'products'
 ]
@@ -93,7 +92,7 @@ DATABASES = {
 }
 
 from mongoengine import connect
-connect('test-sensor')
+connect('theshop-db')
 
 
 # Password validation

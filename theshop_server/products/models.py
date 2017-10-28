@@ -1,51 +1,46 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models
-from django.contrib.auth.models import User
+import json
+from mongoengine import Document
+from mongoengine.fields import StringField, DateTimeField, FloatField, BooleanField
 
 
-class ProductCategory(models.Model):
-    category_name = models.CharField(max_length=100)
+class Product(Document):
+    uniq_id = StringField()
+    crawl_timestamp = DateTimeField()
 
-    def __unicode__(self):
-        return self.category_name
+    product_url = StringField()
+    product_name = StringField()
+    product_category_tree = StringField()
 
+    pid = StringField()
+    retail_price = FloatField()
+    discounted_price = FloatField()
 
-class ProductCompany(models.Model):
-    name = models.CharField(max_length=75)
-    address = models.TextField()
+    image = StringField()
+    is_FK_Advantage_product = BooleanField()
 
-    def __unicode__(self):
-        return self.name
+    description = StringField()
+    product_rating = FloatField()
+    overall_rating = FloatField()
 
+    brand = StringField()
+    product_specifications = StringField()
 
-class ProductBrand(models.Model):
-    name = models.CharField(max_length=75)
+    @property
+    def data(self):
+        _data = json.loads(self.to_json())
+        special = {}
+        product_specifications = json.loads(_data['product_specifications'].replace('=>', ':'))
+        for product_specification in product_specifications['product_specification']:
+            special[product_specification['key'] if product_specification.get('key') else product_specification['value']] = \
+                product_specification['value']
+        _data.update(special)
+        return _data
 
-    def __unicode__(self):
-        return self.name
+    @classmethod
+    def post_save(cls, sender, document, **kwargs):
+        # TODO: Update recommendation model
+        pass
 
-
-class Product(models.Model):
-    title = models.CharField(max_length=200)
-    teaser = models.CharField(max_length=500)
-    description = models.TextField()
-
-    search_text = models.TextField()
-
-    category = models.ForeignKey(ProductCategory)
-    company = models.ForeignKey(ProductCompany)
-    brand = models.ForeignKey(ProductBrand)
-
-    offer_value = models.FloatField(default=0)
-    quantity = models.IntegerField(default=1)
-    price = models.FloatField(default=0)
-
-    published_at = models.DateTimeField('date published')
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User)
-
-    def __unicode__(self):
-        return self.title

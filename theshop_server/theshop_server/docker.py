@@ -10,7 +10,7 @@ ALLOWED_HOSTS = ['*']
 
 from mongoengine import connect, connection
 connection.disconnect()
-connect('test-sensor', host='mongo')
+connect('theshop-db', host='mongo')
 
 CACHES['default']['LOCATION'] = 'redis://redis:6379/1'
 
