@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'fcm_django',
 
     'accounts',
@@ -46,6 +47,14 @@ INSTALLED_APPS = [
     'pages',
     'products'
 ]
+
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

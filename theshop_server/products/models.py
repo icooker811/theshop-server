@@ -43,6 +43,15 @@ class Product(Document):
         _data.update(special)
         return _data
 
+    @property
+    def first_image(self):
+        _first_image = None
+        _data = json.loads(self.to_json())
+        image = json.loads(_data['image'])
+        if image:
+            _first_image = image[0]
+        return _first_image
+
     @classmethod
     def post_save(cls, sender, document, **kwargs):
         # TODO: Update recommendation model
