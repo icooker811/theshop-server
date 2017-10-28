@@ -2,7 +2,21 @@
 
 {% block content %}
 <div>
-    <h3> Hello, The Shop </h3>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-sm-4">
+            <div class="panel panel-default" style="height: 450px">
+                <div class="panel-heading"><p>{{ product.data.product_name }}</p></div>
+                <div class="panel-body">
+                    <img style="width: 100%; height: 300px" src="{{ product.data.first_image }}"/>
+                    <div class="price">₹{{ product.data.discounted_price }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-sm-12" style="width: 100%; margin-top: 20px"></div>
+    </div>
+
 </div>
 
 

@@ -36,6 +36,10 @@ class Product(Document):
         for product_specification in product_specifications['product_specification']:
             special[product_specification['key'] if product_specification.get('key') else product_specification['value']] = \
                 product_specification['value']
+        first_image = json.loads(_data['image'])
+        if first_image:
+            first_image = first_image[0]
+            special['first_image'] = first_image
         _data.update(special)
         return _data
 
